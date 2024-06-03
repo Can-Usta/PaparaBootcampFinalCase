@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,14 +28,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefinder.R
-import com.example.recipefinder.custom.topapbar.RecipeTopAppBar
 import com.example.recipefinder.data.model.Recipe
+import com.example.recipefinder.utils.RecipeFinderDestination
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(),navController :NavHostController,innerPadding: PaddingValues) {
     val recipes by viewModel.recipes.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -45,44 +44,44 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         viewModel.getAllRecipes()
     }
 
-    Scaffold(
-        topBar = { RecipeTopAppBar()}
-    ) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         if (errorMessage != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Text(text = errorMessage ?: "", color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         } else {
-            RecipeList(recipes = recipes, innerPadding)
+            RecipeList(recipes = recipes, innerPadding, navController = navController)
         }
     }
 }
 
 @Composable
-fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues) {
-    Column(
-        modifier = Modifier.padding(
-            top = innerPadding.calculateTopPadding(),
-            bottom = innerPadding.calculateBottomPadding()
-        )
+fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues,navController :NavHostController) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(recipes.size) { recipe ->
-                RecipeItem(recipe = recipes[recipe])
-            }
+        items(recipes.count()) { recipe ->
+            RecipeItem(recipe = recipes[recipe], navController)
         }
     }
 }
 
 @Composable
-fun RecipeItem(recipe: Recipe) {
+fun RecipeItem(recipe: Recipe, navController: NavHostController) {
     Card(
-        onClick = {},
+        onClick = {navController.navigate(RecipeFinderDestination.DETAIL)},
         modifier = Modifier.padding(8.dp)
     ) {
         Row(
@@ -93,9 +92,8 @@ fun RecipeItem(recipe: Recipe) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .weight(1f),
+                    .weight(1f)
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
