@@ -9,8 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.recipefinder.feature.favorite.FavoriteScreen
 import com.example.recipefinder.feature.home.HomeScreen
 import com.example.recipefinder.feature.recipedetail.RecipeDetailScreen
+import com.example.recipefinder.feature.search.SearchScreen
+import com.example.recipefinder.utils.BottomNavItem
 import com.example.recipefinder.utils.RecipeFinderDestination
 
 @Composable
@@ -30,6 +33,12 @@ fun RecipeFinderNavGraph(
             route = RecipeFinderDestination.DETAIL
         ){
             RecipeDetailScreen(paddingValues = paddingValues,navController=navController)
+        }
+        composable(BottomNavItem.Search.route){
+            SearchScreen(navHostController = navController)
+        }
+        composable(BottomNavItem.Favorites.route){
+            FavoriteScreen(navController = navController)
         }
     }
 }
