@@ -8,10 +8,6 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class RecipeRepository @Inject constructor(private val api : RecipeApi){
-    fun getRecipes(query: String): Flow<RecipeResponse> = flow {
-        val response = api.getRecipes(API_KEY, query)
-        emit(response)
-    }
 
     fun getAllRecipe(): Flow<RecipeResponse> = flow {
         val response = api.getAllRecipes(apiKey = API_KEY)

@@ -19,16 +19,6 @@ class HomeViewModel @Inject constructor(private val repository: RecipeRepository
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun getRecipes(query: String) {
-        viewModelScope.launch {
-            repository.getRecipes(query)
-                .catch { e -> _errorMessage.value = e.message }
-                .collect { response ->
-                    _recipes.value = response.results
-                }
-        }
-    }
-
     fun getAllRecipes() {
         viewModelScope.launch {
             repository.getAllRecipe()

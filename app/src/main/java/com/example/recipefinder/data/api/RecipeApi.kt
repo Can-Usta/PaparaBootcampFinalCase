@@ -5,11 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RecipeApi {
-    @GET("recipes/complexSearch")
-    suspend fun getRecipes(
-        @Query("apiKey") apiKey: String,
-        @Query("query") query: String
-    ): RecipeResponse
 
     @GET("recipes/complexSearch")
     suspend fun getAllRecipes(
