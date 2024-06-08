@@ -40,10 +40,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(),navController :NavHost
     val recipes by viewModel.recipes.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.getAllRecipes()
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +77,7 @@ fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues,navController 
 @Composable
 fun RecipeItem(recipe: Recipe, navController: NavHostController) {
     Card(
-        onClick = {navController.navigate(RecipeFinderDestination.DETAIL)},
+        onClick = { navController.navigate("${RecipeFinderDestination.DETAIL}/${recipe.id}")},
         modifier = Modifier.padding(8.dp)
     ) {
         Row(

@@ -19,12 +19,25 @@ class HomeViewModel @Inject constructor(private val repository: RecipeRepository
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun getAllRecipes() {
+    init {
+        getAllRecipes()
+    }
+
+    private fun getAllRecipes() {
         viewModelScope.launch {
             repository.getAllRecipe()
                 .catch { e -> _errorMessage.value = e.message }
                 .collect { response ->
-                    _recipes.value = response.results
+                    if (response.isSuccessful) {
+                        val recipeResponse = response.body()
+                        if (recipeResponse != null) {
+                            _recipes.value = recipeResponse.results
+                        } else {
+                            _errorMessage.value = "No recipes found"
+                        }
+                    } else {
+                        _errorMessage.value = "Failed to fetch recipes: ${response.code()}"
+                    }
                 }
         }
     }

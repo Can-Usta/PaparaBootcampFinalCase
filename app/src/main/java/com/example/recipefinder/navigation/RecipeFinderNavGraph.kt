@@ -5,10 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.recipefinder.feature.favorite.FavoriteScreen
 import com.example.recipefinder.feature.home.HomeScreen
 import com.example.recipefinder.feature.recipedetail.RecipeDetailScreen
@@ -30,9 +32,14 @@ fun RecipeFinderNavGraph(
             HomeScreen(innerPadding = paddingValues,navController=navController)
         }
         composable(
-            route = RecipeFinderDestination.DETAIL
-        ){
-            RecipeDetailScreen(paddingValues = paddingValues,navController=navController)
+            route = "${RecipeFinderDestination.DETAIL}/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: 0
+            RecipeDetailScreen(
+                paddingValues = paddingValues,
+                recipeId = recipeId
+            )
         }
         composable(BottomNavItem.Search.route){
             SearchScreen(navHostController = navController)
