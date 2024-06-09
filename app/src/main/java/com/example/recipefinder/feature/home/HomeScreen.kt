@@ -1,6 +1,8 @@
 package com.example.recipefinder.feature.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +34,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefinder.R
-import com.example.recipefinder.data.model.Recipe
+import com.example.recipefinder.data.remote.model.Recipe
 import com.example.recipefinder.utils.RecipeFinderDestination
 
 
@@ -62,22 +69,24 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(),navController :NavHost
 }
 
 @Composable
-fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues,navController :NavHostController) {
+fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues, navController :NavHostController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
     ) {
         items(recipes.count()) { recipe ->
-            RecipeItem(recipe = recipes[recipe], navController)
+            RecipeItem(recipe = recipes[recipe], navController, viewModel = hiltViewModel())
         }
     }
 }
 
 @Composable
-fun RecipeItem(recipe: Recipe, navController: NavHostController) {
+fun RecipeItem(recipe: Recipe, navController: NavHostController, viewModel: HomeViewModel) {
+    var isFavorite by rememberSaveable { mutableStateOf(recipe.isFavorite) }
+
     Card(
-        onClick = { navController.navigate("${RecipeFinderDestination.DETAIL}/${recipe.id}")},
+        onClick = { navController.navigate("${RecipeFinderDestination.DETAIL}/${recipe.id}") },
         modifier = Modifier.padding(8.dp)
     ) {
         Row(
@@ -108,9 +117,17 @@ fun RecipeItem(recipe: Recipe, navController: NavHostController) {
                 )
             }
             Icon(
-                painter = painterResource(id = R.drawable.baseline_favorite_border_24),
+                painter = painterResource(
+                    id = if (isFavorite) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24
+                ),
                 contentDescription = "",
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        isFavorite = !isFavorite
+                        viewModel.updateFavoriteStatus(recipe.id, !isFavorite)
+                        Log.d("TAG", "RecipeItem: $isFavorite")
+                    },
                 tint = Color.Red
             )
         }

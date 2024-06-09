@@ -2,9 +2,11 @@ package com.example.recipefinder.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefinder.data.model.Recipe
-import com.example.recipefinder.data.repository.RecipeRepository
+import com.example.recipefinder.data.local.entities.RecipeEntity
+import com.example.recipefinder.data.remote.model.Recipe
+import com.example.recipefinder.data.remote.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -14,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: RecipeRepository) : ViewModel() {
     private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipes : StateFlow<List<Recipe>> = _recipes
+    val recipes: StateFlow<List<Recipe>> = _recipes
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
@@ -32,6 +34,14 @@ class HomeViewModel @Inject constructor(private val repository: RecipeRepository
                         val recipeResponse = response.body()
                         if (recipeResponse != null) {
                             _recipes.value = recipeResponse.results
+                            insertRecipesToDatabase(recipeResponse.results.map {
+                                RecipeEntity(
+                                    id = it.id,
+                                    title = it.title,
+                                    image = it.image,
+                                    isFavorite = it.isFavorite
+                                )
+                            })
                         } else {
                             _errorMessage.value = "No recipes found"
                         }
@@ -39,6 +49,18 @@ class HomeViewModel @Inject constructor(private val repository: RecipeRepository
                         _errorMessage.value = "Failed to fetch recipes: ${response.code()}"
                     }
                 }
+        }
+    }
+
+    private fun insertRecipesToDatabase(recipes: List<RecipeEntity>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertRecipe(recipes)
+        }
+    }
+
+    fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateFavoriteStatus(recipeId, isFavorite)
         }
     }
 }

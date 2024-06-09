@@ -1,4 +1,4 @@
-package com.example.recipefinder.data.model
+package com.example.recipefinder.data.remote.model
 
 data class RecipeDetailModel(
     val id: Int = 0,
@@ -19,13 +19,11 @@ data class RecipeDetailModel(
     val creditsText: String = "",
     val cuisines: List<String> = emptyList(),
     val dairyFree: Boolean = false,
-    val diets: List<String> = emptyList(),
     val gaps: String = "",
     val glutenFree: Boolean = false,
     val instructions: String = "",
     val ketogenic: Boolean = false,
     val lowFodmap: Boolean = false,
-    val occasions: List<String> = emptyList(),
     val sustainable: Boolean = false,
     val vegan: Boolean = false,
     val vegetarian: Boolean = false,

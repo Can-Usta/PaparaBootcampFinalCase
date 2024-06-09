@@ -1,7 +1,7 @@
-package com.example.recipefinder.data.api
+package com.example.recipefinder.data.remote.api
 
-import com.example.recipefinder.data.model.RecipeDetailModel
-import com.example.recipefinder.data.model.RecipeResponse
+import com.example.recipefinder.data.remote.model.RecipeDetailModel
+import com.example.recipefinder.data.remote.model.RecipeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -2,8 +2,8 @@ package com.example.recipefinder.feature.recipedetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefinder.data.model.RecipeDetailModel
-import com.example.recipefinder.data.repository.RecipeRepository
+import com.example.recipefinder.data.remote.model.RecipeDetailModel
+import com.example.recipefinder.data.remote.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

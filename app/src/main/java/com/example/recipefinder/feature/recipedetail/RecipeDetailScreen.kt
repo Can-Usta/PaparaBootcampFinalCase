@@ -49,7 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefinder.R
-import com.example.recipefinder.data.model.ExtendedIngredient
+import com.example.recipefinder.data.remote.model.ExtendedIngredient
 import com.example.recipefinder.utils.formatString
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

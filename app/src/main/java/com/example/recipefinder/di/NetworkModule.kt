@@ -1,6 +1,6 @@
 package com.example.recipefinder.di
 
-import com.example.recipefinder.data.api.RecipeApi
+import com.example.recipefinder.data.remote.api.RecipeApi
 import com.example.recipefinder.utils.Constant.BASE_URL
 import dagger.Module
 import dagger.Provides
