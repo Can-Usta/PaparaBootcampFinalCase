@@ -2,6 +2,8 @@ package com.example.recipefinder.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -25,11 +27,11 @@ fun RecipeFinderNavGraph(
     navController: NavHostController,
     startDestination: String = RecipeFinderDestination.HOME
 ) {
-    NavHost(navController = navController, startDestination = startDestination,modifier = modifier) {
+    NavHost(navController = navController, startDestination = startDestination, modifier = modifier) {
         composable(
             route = RecipeFinderDestination.HOME
         ){
-            HomeScreen(innerPadding = paddingValues,navController=navController)
+            HomeScreen(innerPadding = paddingValues, navController = navController)
         }
         composable(
             route = "${RecipeFinderDestination.DETAIL}/{recipeId}",
@@ -41,10 +43,10 @@ fun RecipeFinderNavGraph(
                 recipeId = recipeId
             )
         }
-        composable(BottomNavItem.Search.route){
+        composable(BottomNavItem.Search.route) {
             SearchScreen(navHostController = navController)
         }
-        composable(BottomNavItem.Favorites.route){
+        composable(BottomNavItem.Favorites.route) {
             FavoriteScreen(navController = navController)
         }
     }
