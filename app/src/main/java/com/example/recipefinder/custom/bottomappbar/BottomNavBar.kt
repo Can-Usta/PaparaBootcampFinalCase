@@ -11,33 +11,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefinder.utils.BottomNavItem
 
 @Composable
 fun RecipeBottomNavigationBar(navController: NavController) {
     val items = listOf(BottomNavItem.Home, BottomNavItem.Search, BottomNavItem.Favorites)
 
-    var selectedItem by remember { mutableStateOf(0) }
-    var currentRoute by remember { mutableStateOf(BottomNavItem.Home.route) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-
-    items.forEachIndexed{ index, item ->
-        if (currentRoute == item.route) {
-            selectedItem = index
-        }
-    }
     NavigationBar {
-        items.forEachIndexed{ index, item ->
+        items.forEach { item ->
+            val selected = currentRoute == item.route
             NavigationBarItem(
                 alwaysShowLabel = true,
-                selected = selectedItem == index,
-                label = { Text(text = item.title)},
-                icon = {Icon(painter = painterResource(id = item.icon), contentDescription = item.title) },
+                selected = selected,
+                label = { Text(text = item.title) },
+                icon = { Icon(painter = painterResource(id = item.icon), contentDescription = item.title) },
                 onClick = {
-                    selectedItem = index
-                    currentRoute = item.route
-                    navController.navigate(item.route)
-                })
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
         }
     }
 }
