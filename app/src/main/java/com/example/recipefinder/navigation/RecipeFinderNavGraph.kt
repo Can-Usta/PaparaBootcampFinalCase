@@ -42,7 +42,7 @@ fun RecipeFinderNavGraph(
             SearchScreen(navHostController = navController)
         }
         composable(BottomNavItem.Favorites.route) {
-            FavoriteScreen(navController = navController)
+            FavoriteScreen(navController = navController, innerPadding = paddingValues)
         }
     }
 }

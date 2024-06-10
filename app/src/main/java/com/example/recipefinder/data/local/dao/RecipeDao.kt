@@ -19,12 +19,15 @@ interface RecipeDao {
     @Delete
     fun deleteRecipeDetail(recipe: RecipeDetailEntity)
 
-    @Query("SELECT * FROM recipes")
-    suspend fun getAll(): List<RecipeEntity>
+    @Query("DELETE FROM recipe_detail WHERE id = :id")
+    suspend fun deleteRecipeDetailById(id: Int)
 
-    @Query("SELECT * FROM recipe_detail WHERE id = :id AND isFavorite = 1")
-    suspend fun getById(id: Int): RecipeDetailEntity?
+    @Query("SELECT * FROM recipes WHERE isFavorite = 1")
+    suspend fun getAllFavorite(): List<RecipeEntity>
 
     @Query("UPDATE recipes SET isFavorite = :isFavorite WHERE id = :id")
     suspend fun updateFavorite(id: Int, isFavorite: Boolean)
+
+    @Query("SELECT isFavorite FROM recipes WHERE id = :recipeId")
+    suspend fun getFavoriteStatus(recipeId: Int): Boolean
 }

@@ -43,7 +43,11 @@ import com.example.recipefinder.utils.RecipeFinderDestination
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(),navController :NavHostController,innerPadding: PaddingValues) {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavHostController,
+    innerPadding: PaddingValues
+) {
     val recipes by viewModel.recipes.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -69,7 +73,11 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(),navController :NavHost
 }
 
 @Composable
-fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues, navController :NavHostController) {
+fun RecipeList(
+    recipes: List<Recipe>,
+    innerPadding: PaddingValues,
+    navController: NavHostController
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +91,12 @@ fun RecipeList(recipes: List<Recipe>, innerPadding: PaddingValues, navController
 
 @Composable
 fun RecipeItem(recipe: Recipe, navController: NavHostController, viewModel: HomeViewModel) {
-    var isFavorite by rememberSaveable { mutableStateOf(recipe.isFavorite) }
+    var isFavorite by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = recipe.id) {
+        val favoriteStatus = viewModel.getFavoriteStatus(recipe.id)
+        isFavorite = favoriteStatus
+    }
 
     Card(
         onClick = { navController.navigate("${RecipeFinderDestination.DETAIL}/${recipe.id}") },
@@ -125,8 +138,7 @@ fun RecipeItem(recipe: Recipe, navController: NavHostController, viewModel: Home
                     .size(24.dp)
                     .clickable {
                         isFavorite = !isFavorite
-                        viewModel.updateFavoriteStatus(recipe.id, !isFavorite)
-                        Log.d("TAG", "RecipeItem: $isFavorite")
+                        viewModel.updateFavoriteStatus(recipe.id, isFavorite)
                     },
                 tint = Color.Red
             )

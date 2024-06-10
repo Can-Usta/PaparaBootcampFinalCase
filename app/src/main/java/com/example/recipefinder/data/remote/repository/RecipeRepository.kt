@@ -28,13 +28,12 @@ class RecipeRepository @Inject constructor(private val api : RecipeApi, private 
     suspend fun insertRecipe(recipe: List<RecipeEntity>) {
         recipeDao.insertAllRecipes(recipe)
     }
+    suspend fun getAllFavoriteRecipe() : List<RecipeEntity>{
+        return recipeDao.getAllFavorite()
+    }
 
     suspend fun insertRecipeDetail(recipeDetail: RecipeDetailEntity) {
         recipeDao.insertRecipeDetail(recipeDetail)
-    }
-
-    suspend fun deleteRecipeDetail(recipeDetail: RecipeDetailEntity) {
-        recipeDao.deleteRecipeDetail(recipeDetail)
     }
     suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) {
         recipeDao.updateFavorite(recipeId, isFavorite)
