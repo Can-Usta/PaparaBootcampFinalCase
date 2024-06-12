@@ -12,7 +12,6 @@ import com.example.recipefinder.feature.favorite.FavoriteScreen
 import com.example.recipefinder.feature.favoriterecipdetail.FavoriteRecipeDetailScreen
 import com.example.recipefinder.feature.home.HomeScreen
 import com.example.recipefinder.feature.recipedetail.RecipeDetailScreen
-import com.example.recipefinder.feature.search.SearchScreen
 import com.example.recipefinder.utils.BottomNavItem
 import com.example.recipefinder.utils.RecipeFinderDestination
 
@@ -38,9 +37,6 @@ fun RecipeFinderNavGraph(
                 paddingValues = paddingValues,
                 recipeId = recipeId
             )
-        }
-        composable(BottomNavItem.Search.route) {
-            SearchScreen(navHostController = navController)
         }
         composable(BottomNavItem.Favorites.route) {
             FavoriteScreen(navController = navController, innerPadding = paddingValues)

@@ -16,7 +16,7 @@ import com.example.recipefinder.utils.BottomNavItem
 
 @Composable
 fun RecipeBottomNavigationBar(navController: NavController) {
-    val items = listOf(BottomNavItem.Home, BottomNavItem.Search, BottomNavItem.Favorites)
+    val items = listOf(BottomNavItem.Home, BottomNavItem.Favorites)
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

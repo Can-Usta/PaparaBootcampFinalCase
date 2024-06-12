@@ -36,8 +36,7 @@ class MainActivity : ComponentActivity() {
 
             bottomBarVisibility.value = when (navBackStackEntry?.destination?.route) {
                 RecipeFinderDestination.HOME,
-                BottomNavItem.Favorites.route,
-                BottomNavItem.Search.route -> true
+                BottomNavItem.Favorites.route, -> true
                 "${RecipeFinderDestination.DETAIL}/{recipeId}" -> false
                 else -> true
             }
