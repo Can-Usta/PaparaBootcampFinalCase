@@ -38,9 +38,11 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefinder.R
 import com.example.recipefinder.data.local.entities.RecipeEntity
+import com.example.recipefinder.utils.RecipeFinderDestination
+import com.example.recipefinder.utils.RecipeFinderDestination.DETAIL
 
 @Composable
-fun FavoriteScreen(navController: NavHostController, viewModel: FavoriteViewModel = hiltViewModel(),innerPadding: PaddingValues){
+fun FavoriteScreen(navController: NavHostController, viewModel: FavoriteViewModel = hiltViewModel(), innerPadding: PaddingValues) {
     val favoriteRecipes by viewModel.favoriteRecipes.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -51,7 +53,7 @@ fun FavoriteScreen(navController: NavHostController, viewModel: FavoriteViewMode
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        if(errorMessage != null){
+        if (errorMessage != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -63,25 +65,27 @@ fun FavoriteScreen(navController: NavHostController, viewModel: FavoriteViewMode
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-        }else{
-            RecipeFavoriteList(favoriteRecipes,innerPadding)
+        } else {
+            RecipeFavoriteList(favoriteRecipes, innerPadding, navController)
         }
     }
 }
+
 @Composable
-fun RecipeFavoriteList(favoriteRecipes: List<RecipeEntity>,innerPadding: PaddingValues){
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding)) {
-        items(favoriteRecipes.size){favRecipe->
-            RecipeFavoriteItem(favoriteRecipe = favoriteRecipes[favRecipe],viewModel = hiltViewModel())
-
+fun RecipeFavoriteList(favoriteRecipes: List<RecipeEntity>, innerPadding: PaddingValues, navController: NavHostController) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
+        items(favoriteRecipes.size) { index ->
+            RecipeFavoriteItem(favoriteRecipe = favoriteRecipes[index], navController = navController)
         }
-
     }
 }
+
 @Composable
-fun RecipeFavoriteItem(favoriteRecipe: RecipeEntity,viewModel: FavoriteViewModel){
+fun RecipeFavoriteItem(favoriteRecipe: RecipeEntity, navController: NavHostController, viewModel: FavoriteViewModel = hiltViewModel()) {
     val context = LocalContext.current
     var isFavorite by rememberSaveable { mutableStateOf(false) }
 
@@ -89,8 +93,11 @@ fun RecipeFavoriteItem(favoriteRecipe: RecipeEntity,viewModel: FavoriteViewModel
         val favoriteStatus = viewModel.getFavoriteStatus(favoriteRecipe.id)
         isFavorite = favoriteStatus
     }
+
     Card(
-        onClick = {},
+        onClick = {
+            navController.navigate("${RecipeFinderDestination.FAVORITE_DETAIL}/${favoriteRecipe.id}")
+        },
         modifier = Modifier.padding(8.dp)
     ) {
         Row(
@@ -130,9 +137,9 @@ fun RecipeFavoriteItem(favoriteRecipe: RecipeEntity,viewModel: FavoriteViewModel
                     .clickable {
                         isFavorite = !isFavorite
                         viewModel.updateFavoriteStatus(favoriteRecipe.id, isFavorite)
-                        if (!isFavorite){
+                        if (!isFavorite) {
                             viewModel.removeFavoriteRecipe(favoriteRecipe.id)
-                            Toast.makeText(context,"Removed from favorites",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show()
                         }
                     },
                 tint = Color.Red

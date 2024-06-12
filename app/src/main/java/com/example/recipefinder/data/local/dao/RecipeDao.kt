@@ -10,17 +10,12 @@ import com.example.recipefinder.data.local.entities.RecipeEntity
 
 @Dao
 interface RecipeDao {
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAllRecipes(recipes: List<RecipeEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertRecipeDetail(recipe: RecipeDetailEntity)
-
-    @Delete
-    fun deleteRecipeDetail(recipe: RecipeDetailEntity)
-
-    @Query("DELETE FROM recipe_detail WHERE id = :id")
-    suspend fun deleteRecipeDetailById(id: Int)
 
     @Query("SELECT * FROM recipes WHERE isFavorite = 1")
     suspend fun getAllFavorite(): List<RecipeEntity>
@@ -30,4 +25,7 @@ interface RecipeDao {
 
     @Query("SELECT isFavorite FROM recipes WHERE id = :recipeId")
     suspend fun getFavoriteStatus(recipeId: Int): Boolean
+
+    @Query("SELECT * FROM recipe_detail WHERE id = :id")
+    suspend fun getRecipeDetailById(id: Int): RecipeDetailEntity?
 }

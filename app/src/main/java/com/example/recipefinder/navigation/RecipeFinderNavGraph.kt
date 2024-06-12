@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.recipefinder.feature.favorite.FavoriteScreen
+import com.example.recipefinder.feature.favoriterecipdetail.FavoriteRecipeDetailScreen
 import com.example.recipefinder.feature.home.HomeScreen
 import com.example.recipefinder.feature.recipedetail.RecipeDetailScreen
 import com.example.recipefinder.feature.search.SearchScreen
@@ -43,6 +44,16 @@ fun RecipeFinderNavGraph(
         }
         composable(BottomNavItem.Favorites.route) {
             FavoriteScreen(navController = navController, innerPadding = paddingValues)
+        }
+        composable(
+            route = "${RecipeFinderDestination.FAVORITE_DETAIL}/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: 0
+            FavoriteRecipeDetailScreen(
+                innerPadding = paddingValues,
+                recipeId = recipeId
+            )
         }
     }
 }

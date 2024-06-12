@@ -39,4 +39,9 @@ class RecipeRepository @Inject constructor(private val api : RecipeApi, private 
         recipeDao.updateFavorite(recipeId, isFavorite)
     }
 
+    suspend fun getRecipeDetailFromDb(recipeId: Int): Flow<RecipeDetailEntity?> = flow {
+        val recipeDetail = recipeDao.getRecipeDetailById(recipeId)
+        emit(recipeDetail)
+    }
+
 }

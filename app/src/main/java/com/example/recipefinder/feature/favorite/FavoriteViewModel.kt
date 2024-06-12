@@ -15,8 +15,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoriteViewModel @Inject constructor(private val recipeRepository: RecipeRepository, private val recipeDao: RecipeDao) :
-    ViewModel() {
+class FavoriteViewModel @Inject constructor(
+    private val recipeRepository: RecipeRepository,
+    private val recipeDao: RecipeDao
+) : ViewModel() {
 
     private val _favoriteRecipes = MutableStateFlow<List<RecipeEntity>>(emptyList())
     val favoriteRecipes: StateFlow<List<RecipeEntity>> = _favoriteRecipes
@@ -38,16 +40,19 @@ class FavoriteViewModel @Inject constructor(private val recipeRepository: Recipe
             }
         }
     }
+
     suspend fun getFavoriteStatus(recipeId: Int): Boolean {
         return withContext(Dispatchers.IO) {
             recipeDao.getFavoriteStatus(recipeId)
         }
     }
+
     fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             recipeRepository.updateFavoriteStatus(recipeId, isFavorite)
         }
     }
+
     fun removeFavoriteRecipe(recipeId: Int) {
         _favoriteRecipes.value = _favoriteRecipes.value.filter { it.id != recipeId }
     }
