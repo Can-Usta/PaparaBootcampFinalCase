@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefinder.data.local.dao.RecipeDao
 import com.example.recipefinder.data.local.entities.RecipeEntity
-import com.example.recipefinder.data.remote.model.Recipe
 import com.example.recipefinder.data.remote.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

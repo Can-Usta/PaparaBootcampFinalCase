@@ -39,7 +39,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.recipefinder.R
 import com.example.recipefinder.data.local.entities.RecipeEntity
 import com.example.recipefinder.utils.RecipeFinderDestination
-import com.example.recipefinder.utils.RecipeFinderDestination.DETAIL
 
 @Composable
 fun FavoriteScreen(navController: NavHostController, viewModel: FavoriteViewModel = hiltViewModel(), innerPadding: PaddingValues) {

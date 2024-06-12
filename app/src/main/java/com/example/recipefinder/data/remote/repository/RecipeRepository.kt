@@ -1,6 +1,5 @@
 package com.example.recipefinder.data.remote.repository
 
-import android.util.Log
 import com.example.recipefinder.data.local.dao.RecipeDao
 import com.example.recipefinder.data.local.entities.RecipeDetailEntity
 import com.example.recipefinder.data.local.entities.RecipeEntity
